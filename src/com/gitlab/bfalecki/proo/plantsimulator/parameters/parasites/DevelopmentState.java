@@ -30,5 +30,8 @@ public class DevelopmentState extends ParameterValue {
     public State asEnum(){
         return state;
     }
+    public int asInt(){
+        return state.ordinal();
+    }
 
 }

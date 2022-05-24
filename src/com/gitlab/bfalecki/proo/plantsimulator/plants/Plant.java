@@ -25,7 +25,7 @@ public class Plant {
     private Temperature temperature;
     private SoilPH soilPH;
 
-    private List<Parasite> parasites;
+    protected List<Parasite> parasites;
     private List<Pollution> pollutions;
 
     public Plant(){
@@ -51,6 +51,13 @@ public class Plant {
             if (parasite.getClass() == parasiteInList.getClass())
                 parasiteInList.setValue(parasite.getValue());
         }
+    }
+    public Parasite getParasite(Class parasiteClass){
+        for (Parasite parasite : parasites){
+            if (parasiteClass == parasite.getClass())
+                return parasite;
+        }
+        return null;
     }
     public void increaseParasiteDevelopment(Class parasiteClass){
         for (Parasite parasiteInList : parasites){
@@ -99,6 +106,7 @@ public class Plant {
                 )
         );
     }
+
 
     public boolean isDead(){
         return ((PercentageValue)health.getValue()).asFloat() == 0;

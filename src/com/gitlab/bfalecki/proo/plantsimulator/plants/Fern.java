@@ -3,6 +3,9 @@ package com.gitlab.bfalecki.proo.plantsimulator.plants;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.SoilPHValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.TemperatureValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 
 public class Fern extends Plant{
     @Override
@@ -10,12 +13,15 @@ public class Fern extends Plant{
         float pollutionValue = ((PercentageValue)getPollutionAccess().getValue()).asFloat();
         float insolationValue = ((PercentageValue)getInsolationAccess().getValue()).asFloat();
         float irrigationValue = ((PercentageValue)getIrrigationAccess().getValue()).asFloat();
+        int erysiphalesDevelopment = ((DevelopmentState)getParasite(Erysiphales.class).getValue()).asInt();
+        int fusariumOxysporumDevelopment = ((DevelopmentState)getParasite(FusariumOxysporum.class).getValue()).asInt();
         float healthIncrease = (float) (
                 - 0.1*pollutionValue -
                 0.1*Math.abs(45 - insolationValue) -
-                0.1*Math.abs(20 - irrigationValue)
+                0.1*Math.abs(20 - irrigationValue) -
+                1*erysiphalesDevelopment - 2*fusariumOxysporumDevelopment
         );
-        healthIncrease += -20;
+        healthIncrease += 1;
         this.getHealthAccess().setValue(
                 new PercentageValue(
                         ((PercentageValue) getHealthAccess().getValue()).asFloat() + healthIncrease

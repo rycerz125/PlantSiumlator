@@ -1,12 +1,15 @@
 package com.gitlab.bfalecki.proo.plantsimulator;
 
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
+import java.util.concurrent.*;
+
 public class Simulator {
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
         Plant plant = Plant.Builder().withPollution(0).withInsolation(45).withIrrigation(20).withTemperature(19).withSoilPH(5.9f).build();
         plant.calculateHealth();
         plant.describe();
@@ -17,5 +20,21 @@ public class Simulator {
         fern.setParasite(new Erysiphales(new DevelopmentState(DevelopmentState.State.lightInfection)));
         fern.increaseParasiteDevelopment(Erysiphales.class);
         fern.describe();
+
+
+        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        final CountDownLatch latch = new CountDownLatch(1);
+        executorService.scheduleAtFixedRate(() -> {
+            if (!fern.isDead()) {
+                fern.increaseParasiteDevelopment(Erysiphales.class);
+                System.out.println(((PercentageValue) fern.getHealthAccess().getValue()).asFloat());
+                fern.calculateHealth();
+            } else {
+                System.out.println("Roslina Fern Nie zyje.");
+                latch.countDown();
+            }
+        }, 0,1, TimeUnit.SECONDS);
+        latch.await();
+        executorService.shutdownNow();
     }
 }
