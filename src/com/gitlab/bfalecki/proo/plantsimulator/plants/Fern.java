@@ -1,8 +1,11 @@
 package com.gitlab.bfalecki.proo.plantsimulator.plants;
 
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.NumericValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.SoilPHValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.TemperatureValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.AirPollution;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.Pollution;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
@@ -10,13 +13,13 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Fusari
 public class Fern extends Plant{
     @Override
     public void calculateHealth() {
-        float pollutionValue = ((PercentageValue)getPollutionAccess().getValue()).asFloat();
+        float airPollutionValue =  ((NumericValue) getPollutionsAccess().getPollution(AirPollution.class).getValue()).asFloat();
         float insolationValue = ((PercentageValue)getInsolationAccess().getValue()).asFloat();
         float irrigationValue = ((PercentageValue)getIrrigationAccess().getValue()).asFloat();
-        int erysiphalesDevelopment = ((DevelopmentState)getParasite(Erysiphales.class).getValue()).asInt();
-        int fusariumOxysporumDevelopment = ((DevelopmentState)getParasite(FusariumOxysporum.class).getValue()).asInt();
+        int erysiphalesDevelopment = ((DevelopmentState)getParasitesAccess().getParasite(Erysiphales.class).getValue()).asInt();
+        int fusariumOxysporumDevelopment = ((DevelopmentState)getParasitesAccess().getParasite(FusariumOxysporum.class).getValue()).asInt();
         float healthIncrease = (float) (
-                - 0.1*pollutionValue -
+                - 0.1*airPollutionValue -
                 0.1*Math.abs(45 - insolationValue) -
                 0.1*Math.abs(20 - irrigationValue) -
                 1*erysiphalesDevelopment - 2*fusariumOxysporumDevelopment
@@ -30,10 +33,6 @@ public class Fern extends Plant{
     }
     public static class Builder extends Plant.Builder {
         private Fern plant =  new Fern();
-        public Builder withPollution(float value){
-            plant.getPollutionAccess().setValue(new PercentageValue(value));
-            return this;
-        }
         public Builder withInsolation(float value){
             plant.getInsolationAccess().setValue(new PercentageValue(value));
             return this;
