@@ -2,6 +2,8 @@ package com.gitlab.bfalecki.proo.plantsimulator.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.EventListener;
 
 
 public class Gui{
@@ -15,7 +17,7 @@ public class Gui{
         controlPanelObserver = new ControlPanelObserver();
         frame = new JFrame();
         button = new JButton("nacisnij");
-        button.addActionListener(controlPanelObserver);
+        button.addActionListener(new ControlPanelObserver.Button1Listener());
         label = new JLabel("liczba nacisniec = 0");
         panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));

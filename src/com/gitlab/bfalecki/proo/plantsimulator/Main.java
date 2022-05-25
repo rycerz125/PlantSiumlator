@@ -1,12 +1,14 @@
 package com.gitlab.bfalecki.proo.plantsimulator;
 
 import com.gitlab.bfalecki.proo.plantsimulator.gui.Gui;
+import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
+import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
 public class Main {
-    static Simulator simulator;
+    public static Simulator simulator;
     static Gui gui;
     public static void main(String[] args){
-        simulator = new Simulator();
+        simulator = new Simulator(Fern.class);
         gui = new Gui();
 
 
