@@ -1,6 +1,7 @@
 package com.gitlab.bfalecki.proo.plantsimulator.gui;
 
 import com.gitlab.bfalecki.proo.plantsimulator.Main;
+import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.TemperatureAction;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
 import java.awt.event.ActionEvent;
@@ -13,7 +14,8 @@ public class ControlPanelObserver {
         public void actionPerformed(ActionEvent actionEvent) {
             Plant plant = Main.simulator.plant;
             if (plant.isDead()) return;
-            plant.getInsolationAccess().add(5);
+
+            Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.UP));
             plant.describe();
         }
     }

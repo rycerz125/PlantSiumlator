@@ -3,31 +3,31 @@ package com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.ParameterValue;
 
 public class DevelopmentState extends ParameterValue {
-    private State state;
-    public enum State {
+    private States state;
+    public enum States {
         noPresence, germination, lightInfection, mediumInfection, criticalInfection;
-        static public final State[] values = values();
-        public State next() {
+        static public final States[] values = values();
+        public States next() {
             int index = ordinal() + 1;
             if (index > values.length - 1) index = values.length - 1;
             return values[index];
         }
-        public State previous() {
+        public States previous() {
             int index = ordinal() - 1;
             if (index < 0) index = 0;
             return values[index];
         }
     }
-    public DevelopmentState(State state){
+    public DevelopmentState(States state){
         this.state = state;
     }
     public DevelopmentState(){
-        this.state = State.noPresence;
+        this.state = States.noPresence;
     }
     public String asString(){
         return state.name();
     }
-    public State asEnum(){
+    public States asEnum(){
         return state;
     }
     public int asInt(){

@@ -4,6 +4,10 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.perc
 
 public class Philodendron extends Plant{
     @Override
+    public String getSystematicName(){
+        return "Philodendron";
+    }
+    @Override
     public void calculateHealth() {
         float healthIncrease = 11;
         healthIncrease += 10;

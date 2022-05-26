@@ -15,17 +15,18 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysip
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Plant {
-    private Insolation insolation;
-    private Irrigation irrigation;
-    private Health health;
-    private Temperature temperature;
-    private SoilPH soilPH;
-    private Parasites parasitesObject;
-    private Pollutions pollutionsObject;
-    protected List<Parasite> parasites;
+    private final Insolation insolation;
+    private final Irrigation irrigation;
+    private final Health health;
+    private final Temperature temperature;
+    private final SoilPH soilPH;
+    private final Parasites parasitesObject;
+    private final Pollutions pollutionsObject;
+    protected HashMap<Parasite, Integer> parasitesResistances;
     private List<Pollution> pollutions;
 
     public Plant(){
@@ -36,9 +37,8 @@ public class Plant {
         soilPH = new SoilPH();
 
         parasitesObject = new Parasites();
-        parasites = new ArrayList<>();
-        parasites.add(new FusariumOxysporum());
-        parasites.add(new Erysiphales());
+        parasitesResistances = new HashMap<>();
+        initializeParasites();
 
         pollutionsObject = new Pollutions();
         pollutions = new ArrayList<>();
@@ -46,9 +46,15 @@ public class Plant {
         pollutions.add(new SoilPollution());
         pollutions.add(new Dust());
     }
+    protected void initializeParasites(){
+        parasitesResistances.put(new FusariumOxysporum(), 3);
+        parasitesResistances.put(new Erysiphales(), 5);
+    }
 
 
-
+    public String getSystematicName(){
+        return "Archaeplastida";
+    }
 
     public void describe(){
         float airPollutionValue =  ((NumericValue) getPollutionsAccess().getPollution(AirPollution.class).getValue()).asFloat();
@@ -57,7 +63,7 @@ public class Plant {
         float healthValue = ((NumericValue) health.getValue()).asFloat();
         float temperatureValue = ((NumericValue) temperature.getValue()).asFloat();
         float soilPHValue = ((NumericValue) soilPH.getValue()).asFloat();
-        for (Parasite parasite : parasites){
+        for (Parasite parasite : parasitesResistances.keySet()){
                 System.out.println("Parasite - " + parasite.getClass().getSimpleName() + " : "+  ((DevelopmentState)parasite.getValue()).asString());
         }
         System.out.println("pollution : " + airPollutionValue +
@@ -65,7 +71,9 @@ public class Plant {
                 "\nirrigation : " + irrigationValue +
                 "\nhealth : " + healthValue +
                 "\ntemperature : " + temperatureValue +
-                "\nsoil pH : " + soilPHValue);
+                "\nsoil pH : " + soilPHValue +
+                "\nresistance1 : " + getParasitesAccess().getResistance(Erysiphales.class) +
+                "\nresistance2 : " + getParasitesAccess().getResistance(FusariumOxysporum.class));
     }
     //accessers
 
@@ -80,7 +88,7 @@ public class Plant {
     public Pollutions getPollutionsAccess(){return pollutionsObject;}
 
     public void calculateHealth(){
-        float healthIncrease = 5;
+        float healthIncrease = -20;
         health.setValue(
                 new PercentageValue(
                 ((PercentageValue) health.getValue()).asFloat() + healthIncrease
@@ -116,29 +124,36 @@ public class Plant {
     }
     public class Parasites{
         public void setParasite(Parasite parasite){
-            for (Parasite parasiteInList : parasites){
+            for (Parasite parasiteInList : parasitesResistances.keySet()){
                 if (parasite.getClass() == parasiteInList.getClass())
                     parasiteInList.setValue(parasite.getValue());
             }
         }
         public Parasite getParasite(Class parasiteClass){
-            for (Parasite parasite : parasites){
+            for (Parasite parasite : parasitesResistances.keySet()){
                 if (parasiteClass == parasite.getClass())
                     return parasite;
             }
             return null;
         }
         public void increaseParasiteDevelopment(Class parasiteClass){
-            for (Parasite parasiteInList : parasites){
+            for (Parasite parasiteInList : parasitesResistances.keySet()){
                 if (parasiteClass == parasiteInList.getClass())
                     parasiteInList.increaseDevelopment();
             }
         }
         public void decreaseParasiteDevelopment(Class parasiteClass){
-            for (Parasite parasiteInList : parasites){
+            for (Parasite parasiteInList : parasitesResistances.keySet()){
                 if (parasiteClass == parasiteInList.getClass())
                     parasiteInList.decreaseDevelopment();
             }
+        }
+        public int getResistance(Class parasiteClass){
+            for (Parasite parasiteInList : parasitesResistances.keySet()){
+                if (parasiteClass == parasiteInList.getClass())
+                    return parasitesResistances.get(parasiteInList);
+            }
+            return 0;
         }
     }
     public static class Builder {

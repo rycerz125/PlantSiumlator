@@ -1,5 +1,7 @@
 package com.gitlab.bfalecki.proo.plantsimulator;
 
+import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.HealthyAction;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.TemperatureValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
@@ -7,22 +9,27 @@ import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public final class Simulator {
     public static Plant plant;
+    private static HealthyAction currentHealthyAction;
     public Simulator(Class PlantClass){
+        plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
         if (PlantClass == Fern.class){
-            plant = Fern.Builder().withInsolation(45).withIrrigation(20).withTemperature(100).withSoilPH(4.9f).build();
+            plant =  Fern.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
         } else if(PlantClass == Philodendron.class)
-            plant = new Philodendron();
-        else   plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(100).withSoilPH(4.9f).build();
+            plant = Philodendron.Builder().build();
+        else   plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
     }
     public void startSimulation() throws InterruptedException {
 
         plant.calculateHealth();
         plant.getSoilPHAccess().add(1.4f);
-        plant.getParasitesAccess().setParasite(new Erysiphales(new DevelopmentState(DevelopmentState.State.lightInfection)));
+        plant.getParasitesAccess().setParasite(new Erysiphales(new DevelopmentState(DevelopmentState.States.lightInfection)));
         plant.getParasitesAccess().increaseParasiteDevelopment(Erysiphales.class);
         plant.describe();
 
@@ -31,15 +38,36 @@ public final class Simulator {
         final CountDownLatch latch = new CountDownLatch(1);
         executorService.scheduleAtFixedRate(() -> {
             if (!plant.isDead()) {
-                plant.getParasitesAccess().increaseParasiteDevelopment(Erysiphales.class); // symulacja drufujących parametrów
-                System.out.println(((PercentageValue) plant.getHealthAccess().getValue()).asFloat());
-                plant.calculateHealth();
+                simulateChangingParameters(); // symulacja drufujących parametrów
+                plant.calculateHealth();    // oblicz zdrowie
+                System.out.println(((PercentageValue) plant.getHealthAccess().getValue()).asFloat()); // wyswietl na ekran stan + parametry // Main.gui.refresh();
             } else {
-                System.out.println("Roslina Nie zyje.");
-                latch.countDown();
+                System.out.println("Roslina " + plant.getSystematicName() + " nie zyje.");
+               latch.countDown();
             }
-        }, 0,1, TimeUnit.SECONDS);
+        }, 0,1000, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(() ->{
+            if (currentHealthyAction == null) return;
+            if (currentHealthyAction.getRemainingTime() > 0) {
+                currentHealthyAction.decrementRemainingTime();
+                currentHealthyAction.performActionPart();
+
+                System.out.println("Powiekszamy tenperaature: " + ((TemperatureValue)plant.getTemperatureAccess().getValue()).asFloat());
+
+            }else currentHealthyAction = null;
+        }, 200, 1000, TimeUnit.MILLISECONDS);
+
+
+
         latch.await();
         executorService.shutdownNow();
+    }
+    private void simulateChangingParameters(){
+        plant.getParasitesAccess().increaseParasiteDevelopment(Erysiphales.class);
+    }
+    public void performHealthyAction(HealthyAction healthyActionClicked){
+        if (currentHealthyAction == null) currentHealthyAction = healthyActionClicked;
+        else if (healthyActionClicked.getRemainingTime() != 0) return;
+        currentHealthyAction = healthyActionClicked;
     }
 }
