@@ -1,34 +1,28 @@
 package com.gitlab.bfalecki.proo.plantsimulator.healthyactions;
 
-import com.gitlab.bfalecki.proo.plantsimulator.Main;
+import com.gitlab.bfalecki.proo.plantsimulator.Simulator;
 
-public class TemperatureAction extends HealthyAction{
-    private final Direction direction;
+import java.io.Serializable;
+
+public class TemperatureAction extends HealthyAction implements Serializable {
+    private final Direction directionOfChange;
 
     public enum Direction{
         UP, DOWN
     }
-    public TemperatureAction(Direction direction){
-        this.direction = direction;
+    public TemperatureAction(Direction directionOfChange){
+        this.directionOfChange = directionOfChange;
         totalDuration = 10;
         remainingTime = totalDuration;
     }
 
-    @Override
-    public int getRemainingTime() {
-        return remainingTime;
-    }
 
-    @Override
-    public void decrementRemainingTime() {
-        remainingTime--;
-    }
 
     @Override
     public void performActionPart() {
-        if (direction.equals(Direction.UP))
-            Main.simulator.plant.getTemperatureAccess().add(1);
-        else if (direction.equals(Direction.DOWN))
-            Main.simulator.plant.getTemperatureAccess().add(-1);
+        if (directionOfChange.equals(Direction.UP))
+            Simulator.plant.getTemperatureAccess().add(1);
+        else if (directionOfChange.equals(Direction.DOWN))
+            Simulator.plant.getTemperatureAccess().add(-1);
     }
 }

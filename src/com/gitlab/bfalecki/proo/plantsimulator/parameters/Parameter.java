@@ -1,6 +1,9 @@
 package com.gitlab.bfalecki.proo.plantsimulator.parameters;
 
-public abstract class Parameter {
+
+import java.io.Serializable;
+
+public abstract class Parameter implements Serializable {
     private ParameterValue value;
     public void setValue(ParameterValue value){
         this.value = value;

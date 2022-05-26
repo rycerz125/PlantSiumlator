@@ -2,7 +2,9 @@ package com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites;
 
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.ParameterValue;
 
-public class DevelopmentState extends ParameterValue {
+import java.io.Serializable;
+
+public class DevelopmentState extends ParameterValue implements Serializable {
     private States state;
     public enum States {
         noPresence, germination, lightInfection, mediumInfection, criticalInfection;

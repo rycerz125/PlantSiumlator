@@ -2,7 +2,7 @@ package com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters;
 
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.Parameter;
 
-public class Temperature extends Parameter {
+public class Temperature extends Parameter{
     public Temperature(){
         this(new TemperatureValue());
     }

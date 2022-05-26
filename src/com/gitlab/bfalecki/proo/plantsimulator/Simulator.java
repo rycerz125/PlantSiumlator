@@ -9,14 +9,15 @@ import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
+import java.io.Serializable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public final class Simulator {
+public final class Simulator implements Serializable {
     public static Plant plant;
-    private static HealthyAction currentHealthyAction;
+    public static HealthyAction currentHealthyAction;
     public Simulator(Class PlantClass){
         plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
         if (PlantClass == Fern.class){
@@ -38,6 +39,7 @@ public final class Simulator {
         final CountDownLatch latch = new CountDownLatch(1);
         executorService.scheduleAtFixedRate(() -> {
             if (!plant.isDead()) {
+                SimulationSaver.saveToFile(Main.fileName, this); // zapis do pliku
                 simulateChangingParameters(); // symulacja drufujących parametrów
                 plant.calculateHealth();    // oblicz zdrowie
                 System.out.println(((PercentageValue) plant.getHealthAccess().getValue()).asFloat()); // wyswietl na ekran stan + parametry // Main.gui.refresh();
@@ -52,7 +54,7 @@ public final class Simulator {
                 currentHealthyAction.decrementRemainingTime();
                 currentHealthyAction.performActionPart();
 
-                System.out.println("Powiekszamy tenperaature: " + ((TemperatureValue)plant.getTemperatureAccess().getValue()).asFloat());
+                System.out.println("Wykonuje akcje temperaturowa: " + ((TemperatureValue)plant.getTemperatureAccess().getValue()).asFloat());
 
             }else currentHealthyAction = null;
         }, 200, 1000, TimeUnit.MILLISECONDS);

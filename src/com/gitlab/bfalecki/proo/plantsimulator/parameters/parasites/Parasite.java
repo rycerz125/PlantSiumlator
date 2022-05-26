@@ -2,7 +2,7 @@ package com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites;
 
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.Parameter;
 
-public abstract class Parasite extends Parameter {
+public abstract class Parasite extends Parameter{
     public Parasite(DevelopmentState state){
         super(state);
     }

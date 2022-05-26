@@ -14,11 +14,12 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.Parasite;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Plant {
+public class Plant implements Serializable{
     private final Insolation insolation;
     private final Irrigation irrigation;
     private final Health health;
@@ -99,7 +100,7 @@ public class Plant {
     public boolean isDead(){
         return ((PercentageValue)health.getValue()).asFloat() == 0;
     }
-    public class Pollutions{
+    public class Pollutions implements Serializable{
         public void setPollution(Pollution pollution){
             for (Pollution pollutionInList : pollutions){
                 if (pollution.getClass() == pollutionInList.getClass())
@@ -122,7 +123,7 @@ public class Plant {
             }
         }
     }
-    public class Parasites{
+    public class Parasites implements Serializable{
         public void setParasite(Parasite parasite){
             for (Parasite parasiteInList : parasitesResistances.keySet()){
                 if (parasite.getClass() == parasiteInList.getClass())
