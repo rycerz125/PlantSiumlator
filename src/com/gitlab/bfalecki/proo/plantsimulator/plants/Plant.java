@@ -53,7 +53,7 @@ public class Plant implements Serializable{
     }
 
 
-    public String getSystematicName(){
+    public static String getSystematicName(){
         return "Archaeplastida";
     }
 

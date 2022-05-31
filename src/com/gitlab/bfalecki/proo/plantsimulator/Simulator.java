@@ -26,6 +26,7 @@ public final class Simulator implements Serializable {
             plant = Philodendron.Builder().build();
         else   plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
     }
+    public Simulator(){}
     public void startSimulation() throws InterruptedException {
 
         plant.calculateHealth();
@@ -44,6 +45,7 @@ public final class Simulator implements Serializable {
                 plant.calculateHealth();    // oblicz zdrowie
                 System.out.println(((PercentageValue) plant.getHealthAccess().getValue()).asFloat()); // wyswietl na ekran stan + parametry // Main.gui.refresh();
             } else {
+                SimulationSaver.saveToFile(Main.fileName, this); // zapis do pliku
                 System.out.println("Roslina " + plant.getSystematicName() + " nie zyje.");
                latch.countDown();
             }

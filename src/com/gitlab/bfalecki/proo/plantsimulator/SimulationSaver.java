@@ -23,6 +23,7 @@ public class SimulationSaver {
             objectInputStream.close();
             Simulator.plant = data.plant;
             Simulator.currentHealthyAction = data.healthyAction;
+
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
