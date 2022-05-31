@@ -6,8 +6,6 @@ import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.TemperatureAction;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Orchid;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
-import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.CountDownLatch;
@@ -20,11 +18,8 @@ public class ControlPanelObserver {
     public static class Button1Listener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            Plant plant = Simulator.plant;
-            if (plant.isDead()) return;
-
+            if (Simulator.plant.isDead()) return;
             Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.UP));
-            plant.describe();
         }
     }
     public static class orchidButtonListener implements ActionListener{

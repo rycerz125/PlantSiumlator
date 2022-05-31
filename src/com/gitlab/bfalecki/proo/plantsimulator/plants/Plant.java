@@ -14,6 +14,10 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.Parasite;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +56,15 @@ public class Plant implements Serializable{
         parasitesResistances.put(new Erysiphales(), 5);
     }
 
-
+    public BufferedImage getImage(){
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("planttest.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
     public static String getSystematicName(){
         return "Archaeplastida";
     }

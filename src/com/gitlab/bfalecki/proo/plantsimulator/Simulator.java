@@ -6,6 +6,7 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.perc
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
+import com.gitlab.bfalecki.proo.plantsimulator.plants.Orchid;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
@@ -19,11 +20,13 @@ public final class Simulator implements Serializable {
     public static Plant plant;
     public static HealthyAction currentHealthyAction;
     public Simulator(Class PlantClass){
-        plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
-        if (PlantClass == Fern.class){
+        currentHealthyAction = null;
+        if (PlantClass == Fern.class)
             plant =  Fern.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
-        } else if(PlantClass == Philodendron.class)
+        else if(PlantClass == Philodendron.class)
             plant = Philodendron.Builder().build();
+        else if(PlantClass == Orchid.class)
+            plant = Orchid.Builder().build();
         else   plant = Plant.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
     }
     public Simulator(){}

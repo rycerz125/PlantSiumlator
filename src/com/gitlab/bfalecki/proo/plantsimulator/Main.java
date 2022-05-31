@@ -26,7 +26,6 @@ public class Main {
         if(lastSimulationUsable) {
             gui.showSimulationSourceChoice();
             try {
-                System.out.println("wybierz source");
                 ControlPanelObserver.simulationSourceChoiceLatch.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -35,7 +34,6 @@ public class Main {
         if (!ControlPanelObserver.newSimulation){
             simulator = new Simulator();
         } else{
-            System.out.println("wybierz rosline");
             gui.showPlantChoice();
             try {
                 ControlPanelObserver.plantChoiceLatch.await();
@@ -45,9 +43,6 @@ public class Main {
             simulator = new Simulator(ControlPanelObserver.PlantClass);
         }
 
-
-
-        System.out.println("wybrano, startujemy symulacje!");
         gui.showParametersControlButtons();
 
 

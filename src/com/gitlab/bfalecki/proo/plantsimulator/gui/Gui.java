@@ -1,10 +1,12 @@
 package com.gitlab.bfalecki.proo.plantsimulator.gui;
 
+import com.gitlab.bfalecki.proo.plantsimulator.Simulator;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Orchid;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 
@@ -12,15 +14,17 @@ public class Gui{
     private JLabel label;
     private JFrame frame;
     private JPanel panel;
+    JLabel plantPictureLabel;
     private JButton temperatureButton, orchidButton, fernButton, philodendronButton,
         newSimulationButton, lastSimulationButton;
     public Gui() {
+
         frame = new JFrame();
         initializeButtons();
 
-        label = new JLabel("sym");
+        label = new JLabel();
         panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(300,30,30,30));
+        panel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
         panel.setLayout(new GridLayout(0,1));
 
         panel.add(label);
@@ -28,6 +32,7 @@ public class Gui{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Plant Simulator v0.1");
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     private void initializeButtons(){
@@ -64,14 +69,20 @@ public class Gui{
         frame.pack();
     }
     public void showParametersControlButtons(){
-        label.setText("control your plant");
+        plantPictureLabel = new JLabel(new ImageIcon(Simulator.plant.getImage()));
+
         panel.remove(orchidButton);
         panel.remove(fernButton);
         panel.remove(philodendronButton);
         panel.remove(newSimulationButton);
         panel.remove(lastSimulationButton);
+        panel.remove(label);
 
-        panel.add(temperatureButton);
+        panel.add(plantPictureLabel);
+        panel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        GuiDesigner.main(new String[0]);
+//        label.setText("control your plant");
+//        panel.add(temperatureButton);
         frame.pack();
     }
 }
