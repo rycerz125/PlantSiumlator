@@ -6,7 +6,6 @@ import com.gitlab.bfalecki.proo.plantsimulator.plants.Orchid;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 
@@ -14,7 +13,8 @@ public class Gui{
     private JLabel label;
     private JFrame frame;
     private JPanel panel;
-    JLabel plantPictureLabel;
+    public GuiDesigner guiDesigner;
+    private JLabel plantPictureLabel;
     private JButton temperatureButton, orchidButton, fernButton, philodendronButton,
         newSimulationButton, lastSimulationButton;
     public Gui() {
@@ -70,7 +70,6 @@ public class Gui{
     }
     public void showParametersControlButtons(){
         plantPictureLabel = new JLabel(new ImageIcon(Simulator.plant.getImage()));
-
         panel.remove(orchidButton);
         panel.remove(fernButton);
         panel.remove(philodendronButton);
@@ -80,9 +79,9 @@ public class Gui{
 
         panel.add(plantPictureLabel);
         panel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        GuiDesigner.main(new String[0]);
-//        label.setText("control your plant");
-//        panel.add(temperatureButton);
+        guiDesigner = new GuiDesigner();
+        guiDesigner.main(new String[0]);
+
         frame.pack();
     }
 }

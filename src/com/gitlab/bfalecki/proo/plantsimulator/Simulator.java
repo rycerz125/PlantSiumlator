@@ -47,10 +47,11 @@ public final class Simulator implements Serializable {
                 simulateChangingParameters(); // symulacja drufujących parametrów
                 plant.calculateHealth();    // oblicz zdrowie
                 System.out.println(((PercentageValue) plant.getHealthAccess().getValue()).asFloat()); // wyswietl na ekran stan + parametry // Main.gui.refresh();
+                Main.gui.guiDesigner.refreshGui();
             } else {
                 SimulationSaver.saveToFile(Main.fileName, this); // zapis do pliku
                 System.out.println("Roslina " + plant.getSystematicName() + " nie zyje.");
-               latch.countDown();
+                latch.countDown();
             }
         }, 0,1000, TimeUnit.MILLISECONDS);
         executorService.scheduleAtFixedRate(() ->{

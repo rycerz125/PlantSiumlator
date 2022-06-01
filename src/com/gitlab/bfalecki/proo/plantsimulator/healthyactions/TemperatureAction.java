@@ -21,8 +21,8 @@ public class TemperatureAction extends HealthyAction implements Serializable {
     @Override
     public void performActionPart() {
         if (directionOfChange.equals(Direction.UP))
-            Simulator.plant.getTemperatureAccess().add(1);
+            Simulator.plant.getTemperatureAccess().add(0.3f);
         else if (directionOfChange.equals(Direction.DOWN))
-            Simulator.plant.getTemperatureAccess().add(-1);
+            Simulator.plant.getTemperatureAccess().add(-0.3f);
     }
 }

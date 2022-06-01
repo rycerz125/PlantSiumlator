@@ -13,4 +13,5 @@ public abstract class HealthyAction implements HealthyActionInterface, Serializa
     public void decrementRemainingTime() {
         remainingTime--;
     }
+    public int getTotalDuration(){return totalDuration;}
 }

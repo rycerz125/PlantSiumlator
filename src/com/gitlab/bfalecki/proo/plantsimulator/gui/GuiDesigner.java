@@ -1,5 +1,19 @@
 package com.gitlab.bfalecki.proo.plantsimulator.gui;
 
+import com.gitlab.bfalecki.proo.plantsimulator.Main;
+import com.gitlab.bfalecki.proo.plantsimulator.Simulator;
+import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.TemperatureAction;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.NumericValue;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.AirPollution;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.Dust;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.SoilPollution;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Fungus;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
+import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,34 +27,111 @@ public class GuiDesigner{
     private JButton button7;
     private JButton button9;
     private JButton button10;
-    private JButton button3;
-    private JButton button4;
-    private JButton button8;
-    private JButton button11;
-    private JButton button12;
+    private JButton reduceButton4;
+    private JButton reduceButton3;
+    private JButton reduceButton;
+    private JButton reduceButton1;
+    private JButton reduceButton2;
     private JProgressBar progressBar1;
     private JPanel generalPanel;
     private JProgressBar progressBar2;
+    private JLabel airPollLab;
+    private JLabel soiPollLab;
+    private JLabel dustLab;
+    private JLabel fusOxysLab;
+    private JLabel ErysiphLab;
+    private JLabel insolLab;
+    private JLabel irrigLab;
+    private JLabel tempLab;
+    private JLabel phLab;
+    private static JFrame frame;
 
     public static void main(String[] args){
-        JFrame frame = new JFrame("Control Panel");
-
-
+        frame = new JFrame("Control Panel");
         frame.getContentPane().add(new GuiDesigner().generalPanel);
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-
     }
     public GuiDesigner() {
-
-        button1.addActionListener(new ActionListener() {
+        button9.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-System.out.println("sasdsad");
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.UP));
+            }
+        });
+        button5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.DOWN));
             }
         });
     }
+    public void refreshGui(){
+
+        Plant plant = Simulator.plant;
+        String fusarDevState = ((DevelopmentState) plant.getParasitesAccess().getParasite(FusariumOxysporum.class).getValue()).asString();
+        String erysiphDevState = ((DevelopmentState) plant.getParasitesAccess().getParasite(Erysiphales.class).getValue()).asString();
+
+
+        float health = ( (PercentageValue)plant.getHealthAccess().getValue()).asFloat();
+        float irrig = ((PercentageValue)plant.getIrrigationAccess().getValue()).asFloat();
+        float insol = ((PercentageValue)plant.getInsolationAccess().getValue()).asFloat();
+        float temp = ((NumericValue)plant.getTemperatureAccess().getValue()).asFloat();
+        float pH = ((NumericValue)plant.getSoilPHAccess().getValue()).asFloat();
+        float airPoll = ((PercentageValue)plant.getPollutionsAccess().getPollution(AirPollution.class).getValue()).asFloat();
+        float dust = ((PercentageValue)plant.getPollutionsAccess().getPollution(Dust.class).getValue()).asFloat();
+        float soilPoll = ((PercentageValue)plant.getPollutionsAccess().getPollution(SoilPollution.class).getValue()).asFloat();
+
+        float opProgress;
+        if (Simulator.currentHealthyAction != null) {
+            float opRemainingTime = (float) Simulator.currentHealthyAction.getRemainingTime();
+            float opTotalTime = (float) Simulator.currentHealthyAction.getTotalDuration();
+            opProgress = (opTotalTime - opRemainingTime) / opTotalTime * 100;
+        } else opProgress = 100;
+
+
+        JPanel genPanel = (JPanel) frame.getContentPane().getComponent(0);
+        JProgressBar progressBar1 = (JProgressBar) genPanel.getComponent(1);
+        JProgressBar progressBar2 = (JProgressBar) genPanel.getComponent(2);
+
+        progressBar1.setValue((int)opProgress);
+        progressBar1.setString("Current Operation " + opProgress + "%");
+        progressBar2.setValue((int) health);
+        progressBar2.setString("Health " + health + "%");
+
+        JTabbedPane tabbedPane = (JTabbedPane) genPanel.getComponent(0);
+
+        JPanel parasitesPanel =(JPanel) tabbedPane.getComponent(0);
+        JLabel fusOxysLab = (JLabel) parasitesPanel.getComponent(3);
+        JLabel erysiphLab = (JLabel) parasitesPanel.getComponent(4);
+        fusOxysLab.setText(fusarDevState);
+        erysiphLab.setText(erysiphDevState);
+
+
+        JPanel pollPanel = (JPanel) tabbedPane.getComponent(1);
+        JLabel airPollLab = (JLabel) pollPanel.getComponent(1);
+        JLabel soilPollLab = (JLabel) pollPanel.getComponent(5);
+        JLabel dustLab = (JLabel) pollPanel.getComponent(7);
+        airPollLab.setText(airPoll + "%");
+        soilPollLab.setText(soilPoll + "%");
+        dustLab.setText(dust + "%");
+
+        JPanel lastPanel = (JPanel) tabbedPane.getComponent(2);
+        JLabel insolLab = (JLabel) lastPanel.getComponent(2);
+        JLabel irrigLab = (JLabel) lastPanel.getComponent(3);
+        JLabel tempLab = (JLabel) lastPanel.getComponent(4);
+        JLabel phLab = (JLabel) lastPanel.getComponent(5);
+        insolLab.setText(Float.toString(insol).substring(0,4) + "%");
+        irrigLab.setText(Float.toString(irrig).substring(0,4) + "%");
+        tempLab.setText(Float.toString(temp).substring(0,4) + "°C");
+        phLab.setText(pH +"");
+
+        frame.pack();
+    }
+
+
 
 }
