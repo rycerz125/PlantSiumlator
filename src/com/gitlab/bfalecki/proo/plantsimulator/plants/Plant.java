@@ -65,7 +65,7 @@ public class Plant implements Serializable{
         }
         return image;
     }
-    public static String getSystematicName(){
+    public String getSystematicName(){
         return "Archaeplastida";
     }
 

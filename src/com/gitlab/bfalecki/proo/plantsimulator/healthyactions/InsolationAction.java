@@ -4,20 +4,20 @@ import com.gitlab.bfalecki.proo.plantsimulator.Simulator;
 
 import java.io.Serializable;
 
-public class TemperatureAction extends HealthyAction implements Serializable {
+public class InsolationAction extends HealthyAction implements Serializable {
     private final Direction directionOfChange;
 
-    public TemperatureAction(Direction directionOfChange){
+    public InsolationAction(Direction directionOfChange){
         this.directionOfChange = directionOfChange;
-        totalDuration = 10;
+        totalDuration = 5;
         remainingTime = totalDuration;
     }
 
     @Override
     public void performActionPart() {
         if (directionOfChange.equals(Direction.UP))
-            Simulator.plant.getTemperatureAccess().add(0.3f);
+            Simulator.plant.getInsolationAccess().add(2f);
         else if (directionOfChange.equals(Direction.DOWN))
-            Simulator.plant.getTemperatureAccess().add(-0.3f);
+            Simulator.plant.getInsolationAccess().add(-4f);
     }
 }

@@ -2,7 +2,7 @@ package com.gitlab.bfalecki.proo.plantsimulator.gui;
 
 import com.gitlab.bfalecki.proo.plantsimulator.Main;
 import com.gitlab.bfalecki.proo.plantsimulator.Simulator;
-import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.TemperatureAction;
+import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.*;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.NumericValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.AirPollution;
@@ -58,15 +58,79 @@ public class GuiDesigner{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.UP));
+                Main.simulator.performHealthyAction(new TemperatureAction(Direction.UP));
             }
         });
         button5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.DOWN));
+                Main.simulator.performHealthyAction(new TemperatureAction(Direction.DOWN));
             }
+        });
+        reduceButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new ReduceParasiteAction(FusariumOxysporum.class));
+            }
+        });
+        reduceButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new ReduceParasiteAction(Erysiphales.class));
+            }
+        });
+        reduceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new ReducePollutionAction(AirPollution.class));
+            }
+        });
+        reduceButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new ReducePollutionAction(SoilPollution.class));
+            }
+        });
+        reduceButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new ReducePollutionAction(Dust.class));
+            }
+        });
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new InsolationAction(Direction.DOWN));
+            }
+        });
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new InsolationAction(Direction.UP));
+            }
+        });
+        button7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (Simulator.plant.isDead()) return;
+                Main.simulator.performHealthyAction(new IrrigationAction());
+            }
+        });
+        button6.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new SoilPHAction(Direction.DOWN));
+        });
+        button10.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new SoilPHAction(Direction.UP));
         });
     }
     public void refreshGui(){
@@ -74,7 +138,6 @@ public class GuiDesigner{
         Plant plant = Simulator.plant;
         String fusarDevState = ((DevelopmentState) plant.getParasitesAccess().getParasite(FusariumOxysporum.class).getValue()).asString();
         String erysiphDevState = ((DevelopmentState) plant.getParasitesAccess().getParasite(Erysiphales.class).getValue()).asString();
-
 
         float health = ( (PercentageValue)plant.getHealthAccess().getValue()).asFloat();
         float irrig = ((PercentageValue)plant.getIrrigationAccess().getValue()).asFloat();
@@ -91,7 +154,6 @@ public class GuiDesigner{
             float opTotalTime = (float) Simulator.currentHealthyAction.getTotalDuration();
             opProgress = (opTotalTime - opRemainingTime) / opTotalTime * 100;
         } else opProgress = 100;
-
 
         JPanel genPanel = (JPanel) frame.getContentPane().getComponent(0);
         JProgressBar progressBar1 = (JProgressBar) genPanel.getComponent(1);
@@ -110,7 +172,6 @@ public class GuiDesigner{
         fusOxysLab.setText(fusarDevState);
         erysiphLab.setText(erysiphDevState);
 
-
         JPanel pollPanel = (JPanel) tabbedPane.getComponent(1);
         JLabel airPollLab = (JLabel) pollPanel.getComponent(1);
         JLabel soilPollLab = (JLabel) pollPanel.getComponent(5);
@@ -124,9 +185,9 @@ public class GuiDesigner{
         JLabel irrigLab = (JLabel) lastPanel.getComponent(3);
         JLabel tempLab = (JLabel) lastPanel.getComponent(4);
         JLabel phLab = (JLabel) lastPanel.getComponent(5);
-        insolLab.setText(Float.toString(insol).substring(0,4) + "%");
-        irrigLab.setText(Float.toString(irrig).substring(0,4) + "%");
-        tempLab.setText(Float.toString(temp).substring(0,4) + "°C");
+        insolLab.setText(String.format("%.1f", insol) + "%");
+        irrigLab.setText(String.format("%.1f",irrig) + "%");
+        tempLab.setText(String.format("%.1f",temp)+ "°C");
         phLab.setText(pH +"");
 
         frame.pack();

@@ -37,14 +37,13 @@ public class Gui{
     }
     private void initializeButtons(){
         temperatureButton = new JButton("inc temperature");
-        orchidButton = new JButton(Orchid.getSystematicName());
-        fernButton = new JButton(Fern.getSystematicName());
-        philodendronButton = new JButton(Philodendron.getSystematicName());
+        orchidButton = new JButton(new Orchid().getSystematicName());
+        fernButton = new JButton(new Fern().getSystematicName());
+        philodendronButton = new JButton(new Philodendron().getSystematicName());
         newSimulationButton = new JButton("new simulation");
         lastSimulationButton = new JButton("last simulation");
 
 
-        temperatureButton.addActionListener(new ControlPanelObserver.Button1Listener());
         orchidButton.addActionListener(new ControlPanelObserver.orchidButtonListener());
         fernButton.addActionListener(new ControlPanelObserver.fernButtonListener());
         philodendronButton.addActionListener(new ControlPanelObserver.philodendronButtonListener());

@@ -5,7 +5,8 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.Temp
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
 
 public class Philodendron extends Plant{
-    public static String getSystematicName(){
+    @Override
+    public String getSystematicName(){
         return "Philodendron";
     }
     @Override

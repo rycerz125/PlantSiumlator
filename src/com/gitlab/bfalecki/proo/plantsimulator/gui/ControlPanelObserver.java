@@ -15,13 +15,13 @@ public class ControlPanelObserver {
     public static final CountDownLatch simulationSourceChoiceLatch = new CountDownLatch(1);
     public static Class PlantClass;
     public static boolean newSimulation = true;
-    public static class Button1Listener implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-            if (Simulator.plant.isDead()) return;
-            Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.UP));
-        }
-    }
+//    public static class Button1Listener implements ActionListener{
+//        @Override
+//        public void actionPerformed(ActionEvent actionEvent) {
+//            if (Simulator.plant.isDead()) return;
+//            Main.simulator.performHealthyAction(new TemperatureAction(TemperatureAction.Direction.UP));
+//        }
+//    }
     public static class orchidButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent actionEvent){

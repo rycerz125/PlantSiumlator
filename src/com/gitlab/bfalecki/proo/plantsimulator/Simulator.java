@@ -3,6 +3,7 @@ package com.gitlab.bfalecki.proo.plantsimulator;
 import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.HealthyAction;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.TemperatureValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
+import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.AirPollution;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Fern;
@@ -22,7 +23,7 @@ public final class Simulator implements Serializable {
     public Simulator(Class PlantClass){
         currentHealthyAction = null;
         if (PlantClass == Fern.class)
-            plant =  Fern.Builder().withInsolation(45).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
+            plant =  Fern.Builder().withInsolation(95).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
         else if(PlantClass == Philodendron.class)
             plant = Philodendron.Builder().build();
         else if(PlantClass == Orchid.class)
@@ -35,7 +36,7 @@ public final class Simulator implements Serializable {
         plant.calculateHealth();
         plant.getSoilPHAccess().add(1.4f);
         plant.getParasitesAccess().setParasite(new Erysiphales(new DevelopmentState(DevelopmentState.States.lightInfection)));
-        plant.getParasitesAccess().increaseParasiteDevelopment(Erysiphales.class);
+        plant.getPollutionsAccess().increasePollution(AirPollution.class, 50);
         plant.describe();
 
 
@@ -60,8 +61,6 @@ public final class Simulator implements Serializable {
                 currentHealthyAction.decrementRemainingTime();
                 currentHealthyAction.performActionPart();
 
-                System.out.println("Wykonuje akcje temperaturowa: " + ((TemperatureValue)plant.getTemperatureAccess().getValue()).asFloat());
-
             }else currentHealthyAction = null;
         }, 200, 1000, TimeUnit.MILLISECONDS);
 
@@ -71,7 +70,7 @@ public final class Simulator implements Serializable {
         executorService.shutdownNow();
     }
     private void simulateChangingParameters(){
-        plant.getParasitesAccess().increaseParasiteDevelopment(Erysiphales.class);
+
     }
     public void performHealthyAction(HealthyAction healthyActionClicked){
         if (currentHealthyAction == null) currentHealthyAction = healthyActionClicked;

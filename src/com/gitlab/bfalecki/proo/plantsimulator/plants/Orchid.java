@@ -5,8 +5,8 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.Temp
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
 
 public class Orchid extends Plant{
-
-    public static String getSystematicName(){
+    @Override
+    public String getSystematicName(){
         return "Orchidaceae";
     }
     public static class Builder extends Plant.Builder {

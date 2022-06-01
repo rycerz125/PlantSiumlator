@@ -15,7 +15,8 @@ public class Fern extends Plant{
         parasitesResistances.put(new FusariumOxysporum(), 0);
         parasitesResistances.put(new Erysiphales(), 1);
     }
-    public static String getSystematicName(){
+    @Override
+    public String getSystematicName(){
         return "Polypodiopsida Cronquist";
     }
     @Override

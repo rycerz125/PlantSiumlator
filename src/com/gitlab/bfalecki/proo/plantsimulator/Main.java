@@ -29,6 +29,7 @@ public class Main {
                 ControlPanelObserver.simulationSourceChoiceLatch.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                System.out.println("aasdasdasdasd");
             }
         }
         if (!ControlPanelObserver.newSimulation){
@@ -50,6 +51,7 @@ public class Main {
             simulator.startSimulation();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            System.out.println("aasdasdasdasd");
         }
 
     }
