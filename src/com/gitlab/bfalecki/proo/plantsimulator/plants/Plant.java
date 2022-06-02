@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Plant implements Serializable{
+    private long lifeTimeCounter;
     private final Insolation insolation;
     private final Irrigation irrigation;
     private final Health health;
@@ -35,6 +36,7 @@ public class Plant implements Serializable{
     private List<Pollution> pollutions;
 
     public Plant(){
+        lifeTimeCounter = 0;
         insolation = new Insolation();
         irrigation = new Irrigation();
         health = new Health();
@@ -107,6 +109,12 @@ public class Plant implements Serializable{
                 ((PercentageValue) health.getValue()).asFloat() + healthIncrease
                 )
         );
+    }
+    public long getLifeTimeCounter() {
+        return lifeTimeCounter;
+    }
+    public void incrementLifeTimeCounter(){
+        lifeTimeCounter++;
     }
 
     public boolean isDead(){

@@ -35,6 +35,12 @@ public class Gui{
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+    public void showDeathAnnouncement(){
+        JOptionPane.showMessageDialog(null, "Your plant: '"+Simulator.plant.getSystematicName()+"' is dead :(\nPlease rerun program and try again");
+    }
+    public void showParasiteAnnouncement(){
+        JOptionPane.showMessageDialog(null, "Dangerous parasite development state!\nPlease reduce");
+    }
     private void initializeButtons(){
         temperatureButton = new JButton("inc temperature");
         orchidButton = new JButton(new Orchid().getSystematicName());

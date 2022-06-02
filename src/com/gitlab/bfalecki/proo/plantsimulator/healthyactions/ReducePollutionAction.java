@@ -13,7 +13,7 @@ public class ReducePollutionAction extends HealthyAction implements Serializable
     }
     @Override
     public void performActionPart() {
-            Simulator.plant.getPollutionsAccess().increasePollution(pollutionClassToReduce, -1);
+            Simulator.plant.getPollutionsAccess().increasePollution(pollutionClassToReduce, -2);
 
     }
 }

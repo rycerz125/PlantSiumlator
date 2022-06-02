@@ -10,13 +10,10 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.perc
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.SoilPollution;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentState;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
-import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Fungus;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GuiDesigner{
     private JButton button1;
@@ -54,75 +51,45 @@ public class GuiDesigner{
         frame.setVisible(true);
     }
     public GuiDesigner() {
-        button9.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new TemperatureAction(Direction.UP));
-            }
+        button9.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new TemperatureAction(Direction.UP));
         });
-        button5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new TemperatureAction(Direction.DOWN));
-            }
+        button5.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new TemperatureAction(Direction.DOWN));
         });
-        reduceButton3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new ReduceParasiteAction(FusariumOxysporum.class));
-            }
+        reduceButton3.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new ReduceParasiteAction(FusariumOxysporum.class));
         });
-        reduceButton4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new ReduceParasiteAction(Erysiphales.class));
-            }
+        reduceButton4.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new ReduceParasiteAction(Erysiphales.class));
         });
-        reduceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new ReducePollutionAction(AirPollution.class));
-            }
+        reduceButton.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new ReducePollutionAction(AirPollution.class));
         });
-        reduceButton1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new ReducePollutionAction(SoilPollution.class));
-            }
+        reduceButton1.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new ReducePollutionAction(SoilPollution.class));
         });
-        reduceButton2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new ReducePollutionAction(Dust.class));
-            }
+        reduceButton2.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new ReducePollutionAction(Dust.class));
         });
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new InsolationAction(Direction.DOWN));
-            }
+        button1.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new InsolationAction(Direction.DOWN));
         });
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new InsolationAction(Direction.UP));
-            }
+        button2.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new InsolationAction(Direction.UP));
         });
-        button7.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (Simulator.plant.isDead()) return;
-                Main.simulator.performHealthyAction(new IrrigationAction());
-            }
+        button7.addActionListener(actionEvent -> {
+            if (Simulator.plant.isDead()) return;
+            Main.simulator.performHealthyAction(new IrrigationAction());
         });
         button6.addActionListener(actionEvent -> {
             if (Simulator.plant.isDead()) return;
@@ -160,9 +127,9 @@ public class GuiDesigner{
         JProgressBar progressBar2 = (JProgressBar) genPanel.getComponent(2);
 
         progressBar1.setValue((int)opProgress);
-        progressBar1.setString("Current Operation " + opProgress + "%");
+        progressBar1.setString("Current Operation " + String.format("%.1f", opProgress) + "%");
         progressBar2.setValue((int) health);
-        progressBar2.setString("Health " + health + "%");
+        progressBar2.setString("Health " + String.format("%.1f", health) + "%");
 
         JTabbedPane tabbedPane = (JTabbedPane) genPanel.getComponent(0);
 
