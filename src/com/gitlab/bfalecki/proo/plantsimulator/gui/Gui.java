@@ -14,8 +14,7 @@ public class Gui{
     private JFrame frame;
     private JPanel panel;
     public GuiDesigner guiDesigner;
-    private JLabel plantPictureLabel;
-    private JButton temperatureButton, orchidButton, fernButton, philodendronButton,
+    private JButton orchidButton, fernButton, philodendronButton,
         newSimulationButton, lastSimulationButton;
     public Gui() {
 
@@ -39,10 +38,9 @@ public class Gui{
         JOptionPane.showMessageDialog(null, "Your plant: '"+Simulator.plant.getSystematicName()+"' is dead :(\nPlease rerun program and try again");
     }
     public void showParasiteAnnouncement(){
-        JOptionPane.showMessageDialog(null, "Dangerous parasite development state!\nPlease reduce");
+        new Thread(() -> JOptionPane.showMessageDialog(null, "Dangerous parasite development state!\nPlease reduce")).start();
     }
     private void initializeButtons(){
-        temperatureButton = new JButton("inc temperature");
         orchidButton = new JButton(new Orchid().getSystematicName());
         fernButton = new JButton(new Fern().getSystematicName());
         philodendronButton = new JButton(new Philodendron().getSystematicName());
@@ -74,7 +72,7 @@ public class Gui{
         frame.pack();
     }
     public void showParametersControlButtons(){
-        plantPictureLabel = new JLabel(new ImageIcon(Simulator.plant.getImage()));
+        JLabel plantPictureLabel = new JLabel(new ImageIcon(Simulator.plant.getImage()));
         panel.remove(orchidButton);
         panel.remove(fernButton);
         panel.remove(philodendronButton);

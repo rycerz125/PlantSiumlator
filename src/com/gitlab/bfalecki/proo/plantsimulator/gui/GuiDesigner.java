@@ -41,14 +41,21 @@ public class GuiDesigner{
     private JLabel irrigLab;
     private JLabel tempLab;
     private JLabel phLab;
+    private JPanel mainPanel;
+    private JSlider slider1;
     private static JFrame frame;
 
     public static void main(String[] args){
         frame = new JFrame("Control Panel");
-        frame.getContentPane().add(new GuiDesigner().generalPanel);
+        frame.getContentPane().add(new GuiDesigner().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        JSlider slider = (JSlider) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(2);
+        JLabel label = (JLabel) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(3);
+        double speedPercent = slider.getValue();
+        label.setText("speed: x" + String.format("%.0f",Math.pow(10, (speedPercent+10)/19))) ;
+        Main.simulator.setSpeed(speedPercent);
     }
     public GuiDesigner() {
         button9.addActionListener(actionEvent -> {
@@ -99,6 +106,13 @@ public class GuiDesigner{
             if (Simulator.plant.isDead()) return;
             Main.simulator.performHealthyAction(new SoilPHAction(Direction.UP));
         });
+        slider1.addChangeListener(changeEvent -> {
+            JSlider slider = (JSlider) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(2);
+            JLabel label = (JLabel) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(3);
+            double speedPercent = slider.getValue();
+            label.setText("speed: x" + String.format("%.0f",Math.pow(10, (speedPercent+10)/19))) ;
+            Main.simulator.setSpeed(speedPercent);
+        });
     }
     public void refreshGui(){
 
@@ -122,7 +136,7 @@ public class GuiDesigner{
             opProgress = (opTotalTime - opRemainingTime) / opTotalTime * 100;
         } else opProgress = 100;
 
-        JPanel genPanel = (JPanel) frame.getContentPane().getComponent(0);
+        JPanel genPanel = (JPanel) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(0);
         JProgressBar progressBar1 = (JProgressBar) genPanel.getComponent(1);
         JProgressBar progressBar2 = (JProgressBar) genPanel.getComponent(2);
 

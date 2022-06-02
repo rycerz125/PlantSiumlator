@@ -13,7 +13,6 @@ import com.gitlab.bfalecki.proo.plantsimulator.plants.Orchid;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Philodendron;
 import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
-import javax.swing.*;
 import java.util.SplittableRandom;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -21,7 +20,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public final class Simulator{
-    private int tickTimeInMillis = 10;
+    ScheduledExecutorService executorService;
+    private int tickTimeInMillis = 10; //200 ticks = 24h
     public static Plant plant;
     public static HealthyAction currentHealthyAction;
     public Simulator(Class PlantClass){
@@ -41,16 +41,26 @@ public final class Simulator{
     private boolean getTrueWithProbability(double probability){
         return new SplittableRandom().nextLong(0,(long) (1/probability)) == 0L;
     }
+    public void setSpeed(double percent){
+        double multiplier = Math.pow(10, (percent+10)/19);
+        tickTimeInMillis = (int)(24 /(double) 2 * 3600*1000 / multiplier / 100);
+    }
     public void startSimulation() throws InterruptedException {
 
         plant.calculateHealth();
         plant.describe();
 
+        executorService = Executors.newScheduledThreadPool(1);
 
-        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+
         final CountDownLatch latch = new CountDownLatch(1);
         executorService.scheduleAtFixedRate(() -> {
+            try {
+                Thread.sleep(tickTimeInMillis);
+            } catch (InterruptedException e) {
+            }
             if (!plant.isDead()) {
+
                 SimulationSaver.saveToFile(Main.fileName, this); // zapis do pliku
                 simulateChangingParameters(); // symulacja drufujących parametrów
                 plant.calculateHealth();    // oblicz zdrowie
@@ -60,15 +70,20 @@ public final class Simulator{
                 Main.gui.showDeathAnnouncement();
                 latch.countDown();
             }
-        }, 0,tickTimeInMillis, TimeUnit.MILLISECONDS); // TODO szybkosc symulacji parametryzowana suwakiem
+        }, 0,10, TimeUnit.MILLISECONDS);
         executorService.scheduleAtFixedRate(() ->{
+
             if (currentHealthyAction == null) return;
+            try {
+                Thread.sleep(tickTimeInMillis);
+            } catch (InterruptedException e) {
+            }
             if (currentHealthyAction.getRemainingTime() > 0) {
                 currentHealthyAction.decrementRemainingTime();
                 currentHealthyAction.performActionPart();
 
             }else currentHealthyAction = null;
-        }, tickTimeInMillis/2, tickTimeInMillis, TimeUnit.MILLISECONDS);
+        }, 10/2, 10, TimeUnit.MILLISECONDS);
 
 
 
@@ -100,13 +115,17 @@ public final class Simulator{
         plant.getPollutionsAccess().increasePollution(Dust.class, 0.01f);
 
         if (getTrueWithProbability(0.016 / ((double) plant.getParasitesAccess().getResistance(Erysiphales.class)+1d))){
+            int prev = ((DevelopmentState)plant.getParasitesAccess().getParasite(Erysiphales.class).getValue()).asInt();
             plant.getParasitesAccess().increaseParasiteDevelopment(Erysiphales.class);
-            if (((DevelopmentState)plant.getParasitesAccess().getParasite(Erysiphales.class).getValue()).asInt() > 2)
+            int current = ((DevelopmentState)plant.getParasitesAccess().getParasite(Erysiphales.class).getValue()).asInt();
+            if (current > 2 && current != prev)
                 Main.gui.showParasiteAnnouncement();
         }
         if (getTrueWithProbability(0.016 / ((double) plant.getParasitesAccess().getResistance(FusariumOxysporum.class)+1d))){
+            int prev = ((DevelopmentState)plant.getParasitesAccess().getParasite(FusariumOxysporum.class).getValue()).asInt();
             plant.getParasitesAccess().increaseParasiteDevelopment(FusariumOxysporum.class);
-            if (((DevelopmentState)plant.getParasitesAccess().getParasite(FusariumOxysporum.class).getValue()).asInt() > 2)
+            int current = ((DevelopmentState)plant.getParasitesAccess().getParasite(FusariumOxysporum.class).getValue()).asInt();
+            if (current > 2 && current != prev)
                 Main.gui.showParasiteAnnouncement();
         }
 
