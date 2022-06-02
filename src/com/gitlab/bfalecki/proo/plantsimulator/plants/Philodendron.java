@@ -11,11 +11,26 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentS
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class Philodendron extends Plant{
     @Override
     protected void initializeParasites(){
         parasitesResistances.put(new FusariumOxysporum(), 6);
         parasitesResistances.put(new Erysiphales(), 8);
+    }
+    @Override
+    public BufferedImage getImage(){
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("philodendron.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
     @Override
     public String getSystematicName(){

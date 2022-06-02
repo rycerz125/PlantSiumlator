@@ -11,11 +11,26 @@ import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.DevelopmentS
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.Erysiphales;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.parasites.fungi.FusariumOxysporum;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class Orchid extends Plant{
     @Override
     protected void initializeParasites(){
         parasitesResistances.put(new FusariumOxysporum(), 1);
         parasitesResistances.put(new Erysiphales(), 2);
+    }
+    @Override
+    public BufferedImage getImage(){
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("orchid.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
     @Override
     public void calculateHealth() {
