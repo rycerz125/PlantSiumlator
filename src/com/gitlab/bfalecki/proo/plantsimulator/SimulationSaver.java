@@ -6,7 +6,7 @@ import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 import java.io.*;
 
 public class SimulationSaver {
-    public static void saveToFile(String fileName, Simulator simulator){
+    public static void saveToFile(String fileName){
         Data data = new Data(Simulator.plant, Simulator.currentHealthyAction);
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(fileName));

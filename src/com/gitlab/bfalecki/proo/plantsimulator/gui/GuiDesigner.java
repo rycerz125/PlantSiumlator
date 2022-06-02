@@ -173,7 +173,4 @@ public class GuiDesigner{
 
         frame.pack();
     }
-
-
-
 }

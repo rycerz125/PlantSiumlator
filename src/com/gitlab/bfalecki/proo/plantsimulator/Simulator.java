@@ -1,7 +1,6 @@
 package com.gitlab.bfalecki.proo.plantsimulator;
 
 import com.gitlab.bfalecki.proo.plantsimulator.healthyactions.HealthyAction;
-import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.PercentageValue;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.AirPollution;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.Dust;
 import com.gitlab.bfalecki.proo.plantsimulator.parameters.numericparameters.percentageparameters.pollutions.SoilPollution;
@@ -27,9 +26,9 @@ public final class Simulator{
     public Simulator(Class PlantClass){
         currentHealthyAction = null;
         if (PlantClass == Fern.class)
-            plant =  Fern.Builder().withInsolation(95).withIrrigation(20).withTemperature(20).withSoilPH(4.9f).build();
+            plant =  Fern.Builder().withInsolation(45).withIrrigation(40).withTemperature(20).withSoilPH(5.5f).build();
         else if(PlantClass == Philodendron.class)
-            plant = Philodendron.Builder().build();
+            plant = Philodendron.Builder().withInsolation(40).withIrrigation(20).withTemperature(20).withSoilPH(5.1f).build();
         else if(PlantClass == Orchid.class)
             plant = Orchid.Builder().withInsolation(60).withIrrigation(45).withTemperature(20).withSoilPH(5.2f).build();
         else   plant = Plant.Builder().build();
@@ -48,7 +47,7 @@ public final class Simulator{
     public void startSimulation() throws InterruptedException {
 
         plant.calculateHealth();
-        plant.describe();
+        //plant.describe();
 
         executorService = Executors.newScheduledThreadPool(1);
 
@@ -57,16 +56,16 @@ public final class Simulator{
         executorService.scheduleAtFixedRate(() -> {
             try {
                 Thread.sleep(tickTimeInMillis);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
             if (!plant.isDead()) {
 
-                SimulationSaver.saveToFile(Main.fileName, this); // zapis do pliku
+                SimulationSaver.saveToFile(Main.fileName); // zapis do pliku
                 simulateChangingParameters(); // symulacja drufujących parametrów
                 plant.calculateHealth();    // oblicz zdrowie
                 Main.gui.guiDesigner.refreshGui();
             } else {
-                SimulationSaver.saveToFile(Main.fileName, this); // zapis do pliku
+                SimulationSaver.saveToFile(Main.fileName); // zapis do pliku
                 Main.gui.showDeathAnnouncement();
                 latch.countDown();
             }
@@ -76,7 +75,7 @@ public final class Simulator{
             if (currentHealthyAction == null) return;
             try {
                 Thread.sleep(tickTimeInMillis);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
             if (currentHealthyAction.getRemainingTime() > 0) {
                 currentHealthyAction.decrementRemainingTime();
