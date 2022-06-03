@@ -63,7 +63,7 @@ public final class Simulator{
                 SimulationSaver.saveToFile(Main.fileName); // zapis do pliku
                 simulateChangingParameters(); // symulacja drufujących parametrów
                 plant.calculateHealth();    // oblicz zdrowie
-                Main.gui.guiDesigner.refreshGui();
+                Main.gui.simulationGui.refreshGui();
             } else {
                 SimulationSaver.saveToFile(Main.fileName); // zapis do pliku
                 Main.gui.showDeathAnnouncement();
