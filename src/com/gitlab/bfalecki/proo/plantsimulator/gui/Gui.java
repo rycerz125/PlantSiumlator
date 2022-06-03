@@ -13,7 +13,7 @@ public class Gui{
     private JLabel label;
     private JFrame frame;
     private JPanel panel;
-    public GuiDesigner guiDesigner;
+    public SimulationGui simulationGui;
     private JButton orchidButton, fernButton, philodendronButton,
         newSimulationButton, lastSimulationButton;
     public Gui() {
@@ -82,8 +82,8 @@ public class Gui{
 
         panel.add(plantPictureLabel);
         panel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        guiDesigner = new GuiDesigner();
-        guiDesigner.main(new String[0]);
+        simulationGui = new SimulationGui();
+        simulationGui.main(new String[0]);
 
         frame.pack();
     }

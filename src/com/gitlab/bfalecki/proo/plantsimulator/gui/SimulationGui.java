@@ -15,7 +15,7 @@ import com.gitlab.bfalecki.proo.plantsimulator.plants.Plant;
 
 import javax.swing.*;
 
-public class GuiDesigner{
+public class SimulationGui {
     private JButton button1;
     private JPanel panel;
     private JButton button2;
@@ -47,7 +47,7 @@ public class GuiDesigner{
 
     public static void main(String[] args){
         frame = new JFrame("Control Panel");
-        frame.getContentPane().add(new GuiDesigner().mainPanel);
+        frame.getContentPane().add(new SimulationGui().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -57,7 +57,7 @@ public class GuiDesigner{
         label.setText("speed: x" + String.format("%.0f",Math.pow(10, (speedPercent+10)/19))) ;
         Main.simulator.setSpeed(speedPercent);
     }
-    public GuiDesigner() {
+    public SimulationGui() {
         button9.addActionListener(actionEvent -> {
             if (Simulator.plant.isDead()) return;
             Main.simulator.performHealthyAction(new TemperatureAction(Direction.UP));
@@ -139,6 +139,9 @@ public class GuiDesigner{
         JPanel genPanel = (JPanel) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(0);
         JProgressBar progressBar1 = (JProgressBar) genPanel.getComponent(1);
         JProgressBar progressBar2 = (JProgressBar) genPanel.getComponent(2);
+
+        JLabel hoursLabel = (JLabel) ((JPanel) frame.getContentPane().getComponent(0)).getComponent(1);
+        hoursLabel.setText("hours: "+(long)(plant.getLifeTimeCounter()/8.333333333));
 
         progressBar1.setValue((int)opProgress);
         progressBar1.setString("Current Operation " + String.format("%.1f", opProgress) + "%");
